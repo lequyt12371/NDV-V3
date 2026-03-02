@@ -226,9 +226,10 @@ const LoanApplication: React.FC<LoanApplicationProps> = ({ user, loans, systemBu
   const dueDate = getCalculatedDueDate();
 
   // Tính tổng tiền vay trong chu kỳ hiện tại (các khoản vay có cùng tháng/năm hạn)
+  // Chỉ tính các khoản vay chưa tất toán (ĐANG NỢ, CHỜ DUYỆT, ĐÃ DUYỆT, ĐANG GIẢI NGÂN, CHỜ TẤT TOÁN)
   const currentCycleTotal = loans
     .filter(l => {
-      if (l.status === 'BỊ TỪ CHỐI') return false;
+      if (l.status === 'BỊ TỪ CHỐI' || l.status === 'ĐÃ TẤT TOÁN') return false;
       const [d, m, y] = l.date.split('/').map(Number);
       const [targetD, targetM, targetY] = dueDate.split('/').map(Number);
       return m === targetM && y === targetY;

@@ -149,7 +149,9 @@ const App: React.FC = () => {
         
         const contentType = response.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Server không trả về JSON");
+          const text = await response.text();
+          console.error("Server returned non-JSON response:", text.substring(0, 200));
+          throw new Error(`Server không trả về JSON (Status: ${response.status})`);
         }
 
         const data = await response.json();
