@@ -186,6 +186,19 @@ const AdminUserManagement: React.FC<AdminUserManagementProps> = ({ users, loans,
           const userLoans = [...loans]
             .filter(l => l.userId === u.id)
             .sort((a, b) => {
+              const aIsSettled = ['ĐÃ TẤT TOÁN', 'BỊ TỪ CHỐI'].includes(a.status);
+              const bIsSettled = ['ĐÃ TẤT TOÁN', 'BỊ TỪ CHỐI'].includes(b.status);
+              
+              if (aIsSettled !== bIsSettled) {
+                return aIsSettled ? 1 : -1;
+              }
+              
+              // Sort by updatedAt descending
+              if (a.updatedAt !== b.updatedAt) {
+                return (b.updatedAt || 0) - (a.updatedAt || 0);
+              }
+
+              // Fallback to parsing createdAt if updatedAt is same or missing
               const parseCreatedAt = (str: string) => {
                 try {
                   const [time, date] = str.split(' ');
