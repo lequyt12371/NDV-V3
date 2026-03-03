@@ -9,7 +9,7 @@ import * as dotenv from "dotenv";
 // Load environment variables from .env file
 dotenv.config();
 
-import apiApp from "./api/index";
+import { router as apiRouter } from "./api/index";
 
 async function startServer() {
   const app = express();
@@ -29,8 +29,16 @@ async function startServer() {
   app.use(cors());
   app.use(express.json({ limit: '50mb' }));
 
-  // Use the API routes from /api/index.ts
-  app.use("/api", apiApp);
+  // Use the API router directly
+  app.use("/api", apiRouter);
+
+  // Explicit 404 for /api to prevent fall-through to Vite/SPA fallback
+  app.use("/api", (req, res) => {
+    res.status(404).json({ 
+      error: "API Route Not Found", 
+      message: `Đường dẫn API không tồn tại: ${req.method} ${req.url}` 
+    });
+  });
 
   // Vite middleware for development
   const distPath = path.join(process.cwd(), "dist");

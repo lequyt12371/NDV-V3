@@ -472,9 +472,6 @@ router.use((req, res) => {
   res.status(404).json({ error: `API route not found: ${req.method} ${req.url}` });
 });
 
-const app = express();
-app.use("/api", router);
-app.use("/", router);
-
-// Export the app
-export default app;
+// Export the router instead of a full app for better integration
+export { router };
+export default router;
